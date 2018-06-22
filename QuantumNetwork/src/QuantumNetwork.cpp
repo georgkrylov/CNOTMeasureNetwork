@@ -7,9 +7,10 @@
 //============================================================================
 
 #include <iostream>
-using namespace std;
+#include "qpp.h"
 
+using namespace qpp;
 int main() {
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
-	return 0;
+	std::cout << "Hello Quantum++!\nThis is the |0> state:\n";
+    std::cout << disp(st.z0) << '\n';
 }

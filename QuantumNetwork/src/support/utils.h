@@ -5,8 +5,8 @@
  *      Author: yuriy
  */
 
-#ifndef AUXILARYFUNCTIONS_H_
-#define AUXILARYFUNCTIONS_H_
+#ifndef UTILS_H_
+#define UTILS_H_
 #include <iostream>
 
-#endif /* AUXILARYFUNCTIONS_H_ */
+#endif /* UTILS_H_ */
