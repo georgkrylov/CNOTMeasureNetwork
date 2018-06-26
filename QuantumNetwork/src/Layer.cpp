@@ -7,7 +7,7 @@
 
 #include "Layer.h"
 
-Layer::Layer() {
+Layer::Layer(int numberOfNodes, Layer* prevLayer) {
 	// TODO Auto-generated constructor stub
 
 }

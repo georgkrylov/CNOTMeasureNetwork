@@ -10,7 +10,11 @@
 
 class Layer {
 public:
-	Layer();
+	/*
+	 * Creates a new layer and connects it to its previous layer
+	 * params: int - number of nodes, Layer& - previous node
+	 */
+	Layer(int,Layer*);
 	virtual ~Layer();
 private:
 	Layer* prevLayer;

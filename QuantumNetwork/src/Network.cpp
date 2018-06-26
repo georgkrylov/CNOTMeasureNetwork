@@ -7,8 +7,11 @@
 
 #include "Network.h"
 
-Network::Network() {
-	// TODO Auto-generated constructor stub
+Network::Network(int numberOfhiddenLayers,
+		std::vector<int>& layersConfiguration) {
+	for (int i = 1 ; i < layersConfiguration.size();i++){
+	//	Layer newLayer = new Layer(0,NULL);
+	}
 
 }
 
