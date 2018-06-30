@@ -9,10 +9,12 @@
 #define UTILS_H_
 #include <iostream>
 #include <fstream>
+#include "../params.h"
 #include <iomanip>
 #include <sys/stat.h>
 #include <vector>
 #include "qpp.h"
+
 
 /*
  * Checks if required folder exist, if they don't

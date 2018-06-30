@@ -22,9 +22,9 @@ void checkAndCreateFolder(const char* pathname) {
 	}
 }
 void checkFolders() {
-	const char* weightsFolder = "./weights";
 	checkAndCreateFolder(weightsFolder);
 }
+
 void loadFunction(std::vector<qpp::ket>& inputs,
 		std::vector<qpp::ket>& outputs) {
 	std::ifstream inFile;

@@ -28,10 +28,15 @@ int main() {
   vector <ket> inputs;
   vector <ket> outputs;
   loadFunction(inputs,outputs);
-  for (auto it : inputs){
-	  cout<<disp(it)<<endl<<endl;
-  }
-  for (auto it : outputs){
-	  cout<<disp(it)<<endl<<endl;
-  }
+  double real = 0.8;
+  double imag = 0.6;
+  ket ns = st.z0;
+  cmat U = gt.X;
+  cplx t = {real,0};
+  cplx u = {imag,0};
+  ns << t,u;
+  ns = U*ns;
+  cout<<ns;
+
+
 }
