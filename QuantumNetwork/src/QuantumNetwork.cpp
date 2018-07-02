@@ -9,6 +9,7 @@
 #include <iostream>
 #include "./support/utils.h"
 #include "qpp.h"
+#include "Node.h"
 
 using namespace qpp;
 using namespace std;
@@ -28,15 +29,13 @@ int main() {
   vector <ket> inputs;
   vector <ket> outputs;
   loadFunction(inputs,outputs);
-  double real = 0.8;
-  double imag = 0.6;
-  ket ns = st.z0;
-  cmat U = gt.X;
-  cplx t = {real,0};
-  cplx u = {imag,0};
-  ns << t,u;
-  ns = U*ns;
-  cout<<ns;
-
+  cplx x = {0.8,0};
+  cplx y = {0.6,0};
+  ket t(2);
+  t<< x,y;
+  cout<<disp(t);
+  const char* nodeName = "./weights/n1";
+  Node tmp = Node(nodeName);
+  cout<<tmp<<endl;
 
 }
