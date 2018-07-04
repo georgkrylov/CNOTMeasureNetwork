@@ -21,7 +21,7 @@ public:
 	//The first integer describes the number of input connections, The second integer describes the number of output connections
 	Node(int,int);
 	Node(const char*);
-	void propagateWithInputsAndGenerateOutput(std::vector<qpp::ket>&,qpp::ket);
+	void propagateWithInputsAndGenerateOutput(std::vector<qpp::ket>&,qpp::ket&);
 	virtual ~Node();
 	friend std::ostream& operator <<(std::ostream& stream, const Node& matrix) ;
 private:

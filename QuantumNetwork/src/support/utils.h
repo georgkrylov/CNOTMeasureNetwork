@@ -25,6 +25,6 @@ void checkAndCreateFolder(const char* pathname);
 /*
  * Function loads the contents of targetFunction.txt as an input and encodes it as vector of ket vectors
  */
-void loadFunction(std::vector<qpp::ket>&,std::vector <qpp::ket> &);
+void loadFunction(std::vector<std::vector<qpp::ket>>&,std::vector<std::vector<qpp::ket>>&);
 
 #endif /* UTILS_H_ */

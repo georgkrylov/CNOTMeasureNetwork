@@ -38,19 +38,45 @@ void Node::loadFromCSVFile(std::string nodeName) {
 		qpp::ket tmp(2);
 		tmp << t, u;
 		if (qpp::abssq(tmp).front() - 1 > qpp::eps) {
-			std::cerr << "File has wrong weights that are not unitary!";
+			std::cerr
+					<< "File has wrong, contains weights that are not unitary!";
 			exit(-1);
 		}
 		weights.push_back(tmp);
 	}
 }
+
+void Node::propagateWithInputsAndGenerateOutput(std::vector<qpp::ket>& inputs,
+		qpp::ket& output) {
+	std::vector<qpp::ket> inputsPairedWithWeightQubits;
+	std::cout.precision(20);
+	unsigned int counter, size = weights.size();
+	//Apply Kronecker product on qubit and weights to generate inputs paired with weight qubits
+	for (counter = 0; counter < size; counter++) {
+		inputsPairedWithWeightQubits.push_back(
+				qpp::kron(inputs.at(counter), weights.at(counter)));
+	}
+	for (auto& it : inputsPairedWithWeightQubits)
+		std::cout << std::endl << "Inputs paired with qubits are" << std::endl
+				<< qpp::disp(it) << std::endl;
+	//entangle the inputs paired with weight qubits by applying CNOT
+	qpp::cmat u = qpp::gt.CNOT;
+	for (counter = 0; counter < size; counter++) {
+		inputsPairedWithWeightQubits.at(counter) = u
+				* inputsPairedWithWeightQubits.at(counter);
+	}
+	for (auto& it : inputsPairedWithWeightQubits)
+		std::cout << std::endl << "Inputs paired with qubits are" << std::endl
+				<< qpp::disp(it) << std::endl;
+}
 std::ostream& operator <<(std::ostream& stream, const Node& node) {
 	std::cout.precision(12);
-	stream <<std::endl<< "Node weights are:" << std::endl;
+	stream << std::endl << "Node weights are:" << std::endl;
 	for (auto it : node.weights)
 		stream << "State:" << std::endl << qpp::disp(it) << std::endl;
 	return stream;
 }
+
 Node::~Node() {
 // TODO Auto-generated destructor stub
 }

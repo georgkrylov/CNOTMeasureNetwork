@@ -25,8 +25,8 @@ void checkFolders() {
 	checkAndCreateFolder(weightsFolder);
 }
 
-void loadFunction(std::vector<qpp::ket>& inputs,
-		std::vector<qpp::ket>& outputs) {
+void loadFunction(std::vector<std::vector<qpp::ket>>& inputs,
+		std::vector<std::vector<qpp::ket>>& outputs) {
 	std::ifstream inFile;
 	inFile.open("targetFunction.txt");
 	if (!inFile) {
