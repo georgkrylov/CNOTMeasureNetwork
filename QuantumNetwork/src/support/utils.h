@@ -20,8 +20,11 @@
  * Checks if required folder exist, if they don't
  * creates directories
  */
-void checkFolders();
-void checkAndCreateFolder(const char* pathname);
+void checkFolder(std::string);
+void checkAndCreateFolder(std::string);
+bool checkZeroVector(qpp::ket);
+int loadDescription(std::string);
+void saveDescription(std::string path, int size);
 /*
  * Function loads the contents of targetFunction.txt as an input and encodes it as vector of ket vectors
  */
