@@ -21,9 +21,11 @@ public:
 	 */
 	Layer(std::string,unsigned int,unsigned int);
 	Layer(std::string layerName);
+	void updateLayer(std::vector<qpp::ket>&);
 	std::vector<qpp::ket> getOutputs();
-	void generateOutputs(std::vector<qpp::ket>&);
+	void processInputAndProduceOutput(std::vector<qpp::ket>&);
 	int getNodesCount();
+	double getAccumulatedLogError();
 	virtual ~Layer();
 private:
 

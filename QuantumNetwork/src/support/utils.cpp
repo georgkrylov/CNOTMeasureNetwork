@@ -61,14 +61,14 @@ void loadFunction(std::vector<std::vector<qpp::ket>>& inputs,
 				if (tmp[i])
 					tempStates.push_back(qpp::st.z1);
 				else
-					tempStates.push_back(qpp::st.z1);
+					tempStates.push_back(qpp::st.z0);
 			inputs.push_back(tempStates);
 			tempStates.clear();
-			for (int i = inputsCount + 1; i < entriesCount; i++)
+			for (int i = inputsCount; i < entriesCount; i++)
 				if (tmp[i])
 					tempStates.push_back(qpp::st.z1);
 				else
-					tempStates.push_back(qpp::st.z1);
+					tempStates.push_back(qpp::st.z0);
 			outputs.push_back(tempStates);
 			tmp.clear();
 		}

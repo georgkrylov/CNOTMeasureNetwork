@@ -18,7 +18,8 @@ public:
 
 	Network(std::vector<int>&);
 	Network(std::string);
-	void forward(std::vector<qpp::ket>& inputs);
+	double forward(std::vector<qpp::ket>& inputs,std::vector<qpp::ket>& outputs);
+	void train(std::vector<std::vector<qpp::ket>>functionInputs,std::vector<std::vector<qpp::ket>>functionOutputs);
 	virtual ~Network();
 	friend std::ostream& operator <<(std::ostream& stream, const Network& net) ;
 private:

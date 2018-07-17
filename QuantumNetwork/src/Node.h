@@ -12,6 +12,7 @@
 #include <fstream>
 #include <iomanip>
 #include <sys/stat.h>
+#include <math.h>
 #include "qpp.h"
 #include "string.h"
 
@@ -25,18 +26,25 @@ public:
 	void propagateWithInputsAndGenerateOutput(std::vector<qpp::ket>&);
 	//The argument of function will be modified to produce measured final state which is returned. It is an output of a node
 	void measureTheOutputState(qpp::ket&);
+	double getLogError();
 	qpp::ket getOutputQubit();
-
+	void updateWeights(std::vector<qpp::ket>&);
 	virtual ~Node();
 
 	friend std::ostream& operator <<(std::ostream& stream, const Node& matrix) ;
 private:
 	qpp::ket selectStateOnProbability(std::tuple<qpp::idx, std::vector<double>, std::vector<qpp::cmat>>& resultOfMeasurement);
 	void loadFromCSVFile(std::string);
+	qpp::ket makeExp(double);
+	std::vector<qpp::cplx> getError(std::vector<qpp::ket>& output);
+	std::vector<double> historyData;
 	void saveToInStateFile(std::string nodeName);
 	void saveToCSVFile(std::string);
 	std::vector<qpp::ket> weights;
+	double logFault;
 	qpp::ket outputQubit;
+	//TODO for multi output functions, selection should be vector of vectors
+	std::vector<int> selection;
 
 };
 
