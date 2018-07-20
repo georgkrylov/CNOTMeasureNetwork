@@ -13,15 +13,25 @@
 
 using namespace qpp;
 using namespace std;
-int main() {
 
+void testMakeExp(){
+	//Method was tested, works properly
+	double t = 0.3;
+	Node n = Node("test.txt",2);
+	cout<<"MakeExp Test"<<endl<<qpp::disp(n.makeExp(t))<<std::endl;
+}
+
+void testNodeProcess(){
+Node t = Node ("n1");
+}
+int main() {
 	vector<vector<ket>> inputs;
 	vector<vector<ket>> outputs;
 	loadFunction(inputs, outputs);
-	int numberOfInputs = inputs.at(0).size();
-	int numberOfOutputs = outputs.at(0).size();
-	vector<int> config = { numberOfInputs,1, numberOfOutputs };
-	Network create = Network(config);
+	//int numberOfInputs = inputs.at(0).size();
+	//int numberOfOutputs = outputs.at(0).size();
+	//vector<int> config = { numberOfInputs, numberOfOutputs };
+	//Network create = Network(config);
 	const char* networkName = "testCreate";
 //	//Debug inputs
 //	for (auto& t : inputs) {
@@ -40,7 +50,12 @@ int main() {
 //		}
 //	}
 	Network test = Network(networkName);
+	test.setTolerance(0.95);
+	//std::cout<<"here i am"<<std::endl;
+
 	test.train(inputs, outputs);
+	test.printNetwork();
+	test.test(inputs,outputs,10);
 	//test.forward(inputs.at(0));
 	/* Test Layer*/
 //	Layer t = Layer(1,nodeName);

@@ -13,10 +13,9 @@
 #define weightsFolder "/weights/"
 #define weightsFile "n"
 #define extension ".cls"
-#define LAMBDA 0.2
 #define origState ".initialState"
 #define numberOfMeasurements 100
-#define TOLERANCE 0.2
+
 
 
 #endif /* SUPPORT_PARAMS_H_ */

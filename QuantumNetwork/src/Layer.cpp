@@ -33,40 +33,50 @@ Layer::Layer(std::string layerName, unsigned int numberOfNodes,
 				+ to_string(i);
 		Node t = Node(weightsFileName, numberOfInputNodes);
 	}
+	//std::cout << "Layer with "<<numberOfNodes<< " nodes is created and connected to layer with "<<numberOfInputNodes<<std::endl;
 }
 void Layer::processInputAndProduceOutput(std::vector<qpp::ket>& inputs) {
 	outputs.clear();
 	for (unsigned int i = 0; i < nodes.size(); i++) {
 		nodes.at(i).propagateWithInputsAndGenerateOutput(inputs);
+//		std::cout<<"Layer outputs::"<<std::endl<<qpp::disp(nodes.at(i).getOutputQubit())<<std::endl;
 		outputs.push_back(nodes.at(i).getOutputQubit());
 	}
 
 }
-void Layer::updateLayer(std::vector<qpp::ket>& outputs) {
-	for (unsigned int i = 0 ; i < nodes.size();i++) {
+void Layer::updateLayer(std::vector<std::vector<qpp::ket>>& outputs, double learningRate) {
+	for (unsigned int i = 0; i < nodes.size(); i++) {
 //		std::cout<<"Before update"<<std::endl;
-//		std::cout<<n;
-		nodes[i].updateWeights(outputs);
+//		std::cout<<nodes[i];
+		nodes[i].updateWeights(outputs, learningRate);
 //		std::cout<<n.getLogError()<<std::endl;
 //		std::cout<<"After update";
-//		std::cout<<n;
+//		std::cout<<nodes[i];
 	}
 
 }
+
 int Layer::getNodesCount() {
 	return nodes.size();
 }
 std::vector<qpp::ket> Layer::getOutputs() {
 	return outputs;
 }
-double Layer::getAccumulatedLogError() {
+void Layer::printLayer() {
+	for (Node n : nodes) {
+		std::cout << n;
+	}
+}
+
+double Layer::getAccumulatedLogError(std::vector<qpp::ket>& output) {
+	//std::cout<<"here i am trying to get accumulated log error"<<std::endl;
 	double err = 0.0;
 	for (unsigned int i = 0; i < nodes.size(); i++) {
-		err += nodes.at(i).getLogError();
-		//std::cout << nodes[i] << std::endl;
+		err += nodes.at(i).getLogError(output);
+//		std::cout << nodes[i] << std::endl;
 	}
 	//std::cout << err << std::endl;
-	return err/nodes.size();
+	return err / nodes.size();
 }
 Layer::~Layer() {
 }

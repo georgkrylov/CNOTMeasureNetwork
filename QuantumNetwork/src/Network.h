@@ -17,13 +17,26 @@ public:
 	 */
 
 	Network(std::vector<int>&);
-	Network(std::string);
-	double forward(std::vector<qpp::ket>& inputs,std::vector<qpp::ket>& outputs);
-	void train(std::vector<std::vector<qpp::ket>>functionInputs,std::vector<std::vector<qpp::ket>>functionOutputs);
+	Network(std::string);double forward(std::vector<std::vector<qpp::ket>>&,
+			std::vector<std::vector<qpp::ket>>&);
+	void printNetwork();
+	void train(std::vector<std::vector<qpp::ket>> functionInputs,
+			std::vector<std::vector<qpp::ket>> functionOutputs);
 	virtual ~Network();
-	friend std::ostream& operator <<(std::ostream& stream, const Network& net) ;
+	friend std::ostream& operator <<(std::ostream& stream, const Network& net);
+	void setTolerance(double tolerance);
+	void setLearningRate(double learningRate);
+	double getTolerance();
+	void test(std::vector<std::vector<qpp::ket>> functionInputs,
+			std::vector<std::vector<qpp::ket>> functionOutputs,
+			int numberOfRepetitions);
+	double getLearningRate();
 private:
+	double calculateTheError();
 	std::vector<Layer> Layers;
+	double lambda;
+	std::vector<double>logFaults;
+	double tolerance;
 };
 
 #endif /* NETWORK_H_ */
