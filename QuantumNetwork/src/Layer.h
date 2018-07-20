@@ -22,7 +22,7 @@ public:
 	Layer(std::string,unsigned int,unsigned int);
 	Layer(std::string layerName);
 	void printLayer();
-	void updateLayer(std::vector<std::vector<qpp::ket>>&,double);
+	void updateLayer(std::vector<qpp::ket>&,double);
 	std::vector<qpp::ket> getOutputs();
 	void processInputAndProduceOutput(std::vector<qpp::ket>&);
 	int getNodesCount();

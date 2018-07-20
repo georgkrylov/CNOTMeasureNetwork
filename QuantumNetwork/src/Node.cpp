@@ -10,7 +10,7 @@
 Node::Node(std::string nodeName, int inputConnectionsCount) {
 	historyData = std::vector<double>(inputConnectionsCount);
 	for (int i = 0; i < inputConnectionsCount; i++) {
-		historyData[i] = qpp::rand(0.0, 1.0);
+		historyData[i] = qpp::rand(0.0, 0.5);
 		weights.push_back(makeExp(historyData.at(i)));
 	}
 	saveToCSVFile(nodeName);
@@ -155,8 +155,7 @@ void Node::propagateWithInputsAndGenerateOutput(std::vector<qpp::ket>& inputs) {
 
 		firstPart = qpp::cmat::Identity(firstDimCNOT, firstDimCNOT);
 		thirdPart = qpp::cmat::Identity(secondDimCNOT, secondDimCNOT);
-		expandedCNOT = qpp::kron(qpp::kron(firstPart, qpp::gt.CNOTba),
-				thirdPart);
+		expandedCNOT = qpp::kron(qpp::kron(firstPart, qpp::gt.CNOT), thirdPart);
 		finalGate = expandedSwap * expandedCNOT * expandedSwap;
 		output = finalGate * output;
 
@@ -198,43 +197,45 @@ void Node::measureTheOutputState(qpp::ket& stateToMeasure) {
 qpp::ket Node::getOutputQubit() {
 	return outputQubit;
 }
-void Node::updateWeights(std::vector<std::vector<qpp::ket>>& output,
-		double learningRate) {
-	for (std::vector<qpp::ket> out : output) {
-		std::vector<qpp::cplx> errors = getErrorPerOutputVariable(out);
-		double delta;
-		if (logFault != 0) {
-			for (unsigned int i = 0; i < historyData.size(); i++) {
+void Node::updateWeights(std::vector<qpp::ket>& output, double learningRate) {
+	std::vector<qpp::cplx> errors = getErrorPerOutputVariable(output);
+	double delta;
+	double val = 0;
+	for (qpp::cplx temp : errors)
+		val += std::abs(temp.real());
+//	std::cout << "LogFaults are:" << logFault << " val is" << val << std::endl;
+	if (logFault != 0 && val != 0) {
+		for (unsigned int i = 0; i < historyData.size(); i++) {
 
-				//square
-				delta = calculateDelta(errors, i);
+			//square
+			delta = calculateDelta(errors, i);
 
-//		std::cout << "History data for node" << name << ", weight number " << i
-//				<< " is: " << historyData[i] << std::endl;
-				historyData[i] = historyData[i] + learningRate * delta;
-//
-//		std::cout << "History data for node" << name << ", weight number " << i
-//				<< " after change is: " << historyData[i] << std::endl;
-				if (historyData[i] > 1) {
-					historyData[i] = historyData[i] - 1;
-				} else if (historyData[i] < 0) {
-					historyData[i] = 1 - historyData[i];
-				}
-				weights[i] = makeExp(historyData.at(i));
-//		weights[i] = makeExp(0.3);
+//			std::cout << "History data for node" << name << ", weight number "
+//					<< i << " is: " << historyData[i] << std::endl;
+			historyData[i] = historyData[i] + learningRate * delta;
+
+//			std::cout << "History data for node" << name << ", weight number "
+//					<< i << " after change is: " << historyData[i] << std::endl;
+			while (historyData[i] > 0.5) {
+				historyData[i] = historyData[i] - 0.5;
 			}
+			while (historyData[i] < 0) {
+				historyData[i] = 0.5 + historyData[i];
+			}
+			weights[i] = makeExp(historyData.at(i));
+//		weights[i] = makeExp(0.3);
 		}
 	}
 }
 double Node::calculateDelta(std::vector<qpp::cplx>& errors, int i) {
 	//Here, errors are per output, so size of this vector is 1 for one output functions.
-	qpp::ket q = weights[i];
 
 	double w = weights.at(i).real()[0];
 	double t = errors[0].real() - w;
 //	std::cout << "Weights are" << std::endl << qpp::disp(q) << std::endl
 //			<< "errors are " << errors[0] << std::endl << " delta is"
 //			<< std::endl << t << std::endl;
+//	std::cout << " delta is" << std::endl << t << std::endl;
 	return t;
 }
 double Node::getLogError(std::vector<qpp::ket>& output) {
@@ -247,6 +248,7 @@ double Node::getLogError(std::vector<qpp::ket>& output) {
 	}
 
 	logFault = logFault / 2;
+
 //	std::cout << "Log Faults are" << logFault << std::endl;
 //	std::cout << "Errors are" << std::endl << qpp::disp(errors[0]) << std::endl
 //			<< " Error size is" << errors.size() << std::endl;
@@ -264,11 +266,14 @@ std::vector<qpp::cplx> Node::getErrorPerOutputVariable(
 			mesResult= {0,1};
 			else
 			mesResult= {1,0};
-		qpp::ket t_t = output.at(i);
-		qpp::cplx t = t_t[0];
+		qpp::ket out = output.at(i);
+		double f = out.real()[0];
+		double s = out.real()[1];
+		qpp::cplx t = { f, s };
+//		std::cout << "I is " << i << std::endl<<"Mes result is:" << mesResult
+//				 <<" T is:"<<t<<" Max sel is"<< maxSel<<" output is"<<output.at(i)<<std::endl;
 		mesResult = t - mesResult;
-//		std::cout << "I is " << i << std::endl << t_t[0] << std::endl
-//				<< "Mes result is:" << mesResult << std::endl;
+//		std:: cout<< " Mes result is:" << mesResult<<std::endl;
 		result.push_back(mesResult);
 	}
 //	std::cout << std::endl << "Selection is:";

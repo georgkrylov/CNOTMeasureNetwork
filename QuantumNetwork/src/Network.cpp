@@ -62,23 +62,32 @@ double Network::calculateTheError() {
 double Network::forward(std::vector<std::vector<qpp::ket>>& functionInputs,
 		std::vector<std::vector<qpp::ket>>& functionOutputs) {
 	double meanError = 0;
-	logFaults.clear();
 	for (unsigned int i = 0; i < functionInputs.size(); i++) {
-
+//		std::cout<<std::endl<<"Working with input"<< i<<std::endl;
 		std::vector<qpp::ket> temp = functionInputs.at(i);
 		std::vector<qpp::ket> output = functionOutputs.at(i);
-		for (unsigned int i = 0; i < Layers.size(); i++) {
-			Layers.at(i).processInputAndProduceOutput(temp);
-			temp = Layers.at(i).getOutputs();
+		for (unsigned int l = 0; l < Layers.size(); l++) {
+			Layers.at(l).processInputAndProduceOutput(temp);
+			temp = Layers.at(l).getOutputs();
 		}
 		double finalLogError = 0;
-		for (unsigned int i = 0; i < Layers.size(); i++) {
-			finalLogError = Layers.at(i).getAccumulatedLogError(output);
+		for (unsigned int l = 0; l < Layers.size(); l++) {
+			finalLogError = Layers.at(l).getAccumulatedLogError(output);
 		}
+		for (Layer& l : Layers)
+			l.updateLayer(functionOutputs[i], lambda);
 		//EachLayer???
-		logFaults.push_back(finalLogError);
+		logFaults[i]=finalLogError;
+//		std::cout<<"LogFaults = "<<std::endl;
+//		for(double l:logFaults)
+//			std::cout<<l<<std::endl;
+//		std::cout<<std::endl;
+
+		meanError = calculateTheError();
+//		std::cout << "Error is:" << meanError << std::endl;
+
 	}
-	meanError = calculateTheError();
+
 //	std::cout<<"Layer size is: "<<Layers.size()<<std::endl;
 	return meanError;
 
@@ -93,14 +102,15 @@ void Network::train(std::vector<std::vector<qpp::ket>> functionInputs,
 		std::vector<std::vector<qpp::ket>> functionOutputs) {
 	double meanError = 1.0;
 	logFaults = std::vector<double>(functionInputs.size());
+	int i = 0;
 	while (1 - meanError < tolerance) {
-//	int i = 0;
-//	while (i < 1) {
+
+//	while (i < 30) {
 //		i++;
+		i++;
 		meanError = forward(functionInputs, functionOutputs);
-		for (Layer l : Layers)
-			l.updateLayer(functionOutputs, lambda);
-		std::cout << "Error is:" << meanError << std::endl;
+		if (i%100==0)
+			lambda = lambda +0.01;
 	}
 
 }
@@ -112,20 +122,27 @@ void Network::printNetwork() {
 void Network::test(std::vector<std::vector<qpp::ket>> functionInputs,
 		std::vector<std::vector<qpp::ket>> functionOutputs,
 		int numberOfRepetitions) {
-
+	std::vector<int> realOutp;
+	int rll,mrl;
+	std::vector<int>count= std::vector<int>(numberOfRepetitions);
+	for (int& c:count)
+		c=0;
 	for (unsigned int i = 0; i < functionInputs.size(); i++) {
 
 		std::cout << std::endl << "For inputs:" << std::endl;
 		for (unsigned int j = 0; j < functionInputs[i].size(); j++) {
 			auto result = qpp::measure(functionInputs[i][j], qpp::gt.Z, { 0 });
 			std::cout << std::get<0>(result) << " ";
+
 		}
 		std::cout << ":";
 		for (unsigned int j = 0; j < functionOutputs[i].size(); j++) {
 			for (int q = 0; q < 1; q++) {
 				auto result = qpp::measure(functionOutputs[i][j], qpp::gt.Z,
 						{ 0 });
-				std::cout << std::get<0>(result) << " ";
+				rll=std::get<0>(result) ;
+				std::cout << rll << " ";
+
 			}
 		}
 		std::cout << "Got outputs:";
@@ -137,10 +154,23 @@ void Network::test(std::vector<std::vector<qpp::ket>> functionInputs,
 			}
 			for (unsigned int j = 0; j < temp.size(); j++) {
 				auto result = qpp::measure(temp[j], qpp::gt.Z, { 0 });
-				std::cout << std::get<0>(result);
+				mrl = std::get<0>(result);
+				std::cout<<mrl;
+
+			}
+			if (mrl==rll){
+				count[qq]+=1<<i;
 			}
 		}
+		std::cout<<std::endl;
 	}
+	double percent = 0.0;
+	int limit = (1<<(functionInputs.size()))-1;
+	for(int c:count){
+		if (c==limit)
+			percent = percent+1;
+	}
+	std::cout<<"This network will approximate the function in "<<percent/numberOfRepetitions*100<<" percents"<<std::endl;
 }
 std::ostream& operator <<(std::ostream& stream, const Network& net) {
 	stream << net.Layers.size() << std::endl;

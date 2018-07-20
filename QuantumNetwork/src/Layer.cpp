@@ -44,7 +44,7 @@ void Layer::processInputAndProduceOutput(std::vector<qpp::ket>& inputs) {
 	}
 
 }
-void Layer::updateLayer(std::vector<std::vector<qpp::ket>>& outputs, double learningRate) {
+void Layer::updateLayer(std::vector<qpp::ket>& outputs, double learningRate) {
 	for (unsigned int i = 0; i < nodes.size(); i++) {
 //		std::cout<<"Before update"<<std::endl;
 //		std::cout<<nodes[i];

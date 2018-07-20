@@ -28,7 +28,7 @@ public:
 	void measureTheOutputState(qpp::ket&);
 	double getLogError(std::vector<qpp::ket>& output);
 	qpp::ket getOutputQubit();
-	void updateWeights(std::vector<std::vector<qpp::ket>>&,double);
+	void updateWeights(std::vector<qpp::ket>&,double);
 	virtual ~Node();
 	qpp::ket makeExp(double);
 
