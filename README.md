@@ -20,6 +20,6 @@ $cd bl
 $cmake ../
 $ sudo make install
 
-This will be in /usr/local/include/eigen3 , call it $eigpath
+This will be in /usr/local/include/eigen3 , call it $EIGPATH
 
 To link libraries, add -std=c++11 -isystem $QPPATH -I $EIGPATH to your g++ compilation line.
